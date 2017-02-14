@@ -1,10 +1,11 @@
 import datetime
 
-from flask.ext.bcrypt import generate_password_hash
-from flask.ext.login import UserMixin
+from flask_bcrypt import generate_password_hash
+from flask_login import UserMixin
 from peewee import *
 
 DATABASE = SqliteDatabase('ideas.db')
+
 
 class User(UserMixin, Model):
     first_name = CharField(unique=True)
@@ -16,22 +17,42 @@ class User(UserMixin, Model):
 
     class Meta:
         database = DATABASE
-        order_by =('-joined_at')
+        order_by = ('-joined_at',)
+
+    def get_ideas(self):
+        return Idea.select().where(Idea.user == self)
 
     @classmethod
-    def create_user(cls, first_name, last_name, username,email, password):
+    def create_user(cls, first_name, last_name, username, email, password):
         try:
             cls.create(
                 first_name=first_name,
                 last_name=last_name,
                 username=username,
                 email=email,
-                password =generate_password_hash(password)
+                password=generate_password_hash(password)
             )
-        except: IntegrityError:
+        except IntegrityError:
             raise ValueError("User already exists")
 
-    def initialize():
-        DATABASE.connect()
-        DATABASE.create_table([User], safe=True)
-        DATABASE.close()
+
+class Idea(Model):
+    timestamp = DateTimeField(default=datetime.datetime.now)
+    user = ForeignKeyField(
+        rel_model=User,
+        related_name='ideas'
+    )
+    title = TextField()
+    description = TextField()
+
+    class Meta:
+        database = DATABASE
+        order_by = ('-timestamp',)
+
+
+
+
+def initialize():
+    DATABASE.connect()
+    DATABASE.create_table(User, safe=True)
+    DATABASE.close()
