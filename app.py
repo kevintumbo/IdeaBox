@@ -1,6 +1,7 @@
 from flask import Flask, g, render_template, flash, redirect, url_for
 from flask_bcrypt import check_password_hash
-from flask_login import LoginManager, login_user, logout_user, login_required
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from flask_pagedown import PageDown
 
 import forms
 import models
@@ -11,6 +12,7 @@ HOST = '127.0.0.1'
 
 app = Flask(__name__)
 app.secret_key = 'neyioyei,sfvfvnefenis,3435.eooetoe,wyiywiy!5*'
+pagedown = PageDown(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -30,7 +32,7 @@ def before_request():
     """Connect to the database before each request"""
     g.db = models.DATABASE
     g.db.connect()
-
+    g.user = current_user
 
 @app.after_request
 def after_request(response):
@@ -83,7 +85,8 @@ def logout():
 @app.route('/profile')
 @login_required
 def profile():
-    return render_template('profile.html')
+    stream = current_user.get_ideas().limit(10)
+    return render_template('profile.html', stream=stream)
 
 
 @app.route('/new_idea', methods=('GET', 'POST'))
@@ -94,10 +97,9 @@ def idea():
         models.Idea.create(user=g.user._get_current_object(),
                            title=form.title.data.strip(),
                            description=form.description.data)
-        flash("", "")
-        return redirect(url_for('index'))
-    return render_template()
-
+        flash("Awesome. You have posted a new idea", "Success")
+        return redirect(url_for('profile'))
+    return render_template('post_idea.html', form=form)
 
 
 @app.route('/')
