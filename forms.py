@@ -1,6 +1,7 @@
 from flask_wtf import Form
 from wtforms import StringField, PasswordField, TextAreaField
 from wtforms.validators import DataRequired, Regexp, ValidationError, Email, Length, EqualTo
+from flask_pagedown.fields import PageDownField
 
 from models import User
 
@@ -81,8 +82,8 @@ class LoginForm(Form):
 
 
 class IdeaForm(Form):
-    title = TextAreaField('Title', validators=[DataRequired()])
-    description = TextAreaField('Description', validators=[DataRequired()])
+    title = StringField('Title', validators=[DataRequired()])
+    description = PageDownField('Description', validators=[DataRequired()])
 
 
 

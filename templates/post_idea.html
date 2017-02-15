@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>IdeaBox - Post Idea</title>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/signup.css">
+    <script type="text/javascript" src="/static/js/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+    {{ pagedown.include_pagedown() }}
+</head>
+<body>
+	<nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">IdeaBox</a>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <!--show name-->
+                    {% if current_user.is_authenticated %}
+                        {{ current_user.first_name}} {{current_user.last_name}}
+                    {% endif %}
+                <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                 {% if current_user.is_authenticated %}
+                  <li><a href="#">Home</a></li>
+                  <li><a href="{{ url_for('profile')}}">My profile</a></li>
+                  <li><a href="{{ url_for('idea')}}">Create New Post</a></li>
+                  <!--show logout-->
+                  <li><a href="{{ url_for('logout')}}"> Log Out</a></li>
+                 {% endif %}
+                </ul>
+            </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="jumbotron text-center">
+      <h1>IdeaBox</h1>
+      <p>Good design begins with honesty, asks tough questions, comes from collaboration and from trusting your intuition.
+      - Freeman Thomas</p>
+    </div>
+
+	<div class="container">
+  		<div class="row">
+    		<form method="post" action="" id="contact-form" class="contact-form">
+                {{ form.hidden_tag() }}
+                <div class="row">
+                	<h3 class="text-center">Post A New Idea</h3>
+                    <div class="col-md-12">
+                        <div class="field">
+                            {% if form.title.errors %}
+                                {% for error in form.title.errors %}
+                                    <div class="notification_error">
+                                        {{ error }}
+                                    </div>
+                        {% endfor %}
+                        {% endif %}
+                        </div>
+                        <div class="form-group">
+                            {{ form.title(placeholder="title", class_='form-control') }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="field">
+                            {% if form.description.errors %}
+                                {% for error in form.description.errors %}
+                                    <div class="notification_error">
+                                        {{ error }}
+                                    </div>
+                        {% endfor %}
+                        {% endif %}
+                        </div>
+                        <div class="form-group">
+                      	    {{ form.description(placeholder="description", class_='form-control textarea') }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                  		<button type="submit" class="btn main-btn pull-right">Post Idea</button>
+                  	</div>
+                </div>
+            </form>
+  		</div>
+	</div>
+
+	<hr>
+    <footer>
+        <p>Designed by: Kevin Tumbo</p>
+        <p>Contact information: <a href="mailto:kevin.tumbo39@gmail.com">Kevin.tumbo39@gmail.com</a>.</p>
+    </footer>
+</body>
+</html>

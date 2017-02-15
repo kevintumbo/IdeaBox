@@ -50,9 +50,7 @@ class Idea(Model):
         order_by = ('-timestamp',)
 
 
-
-
 def initialize():
     DATABASE.connect()
-    DATABASE.create_table(User, safe=True)
+    DATABASE.create_tables([User, Idea], safe=True)
     DATABASE.close()
