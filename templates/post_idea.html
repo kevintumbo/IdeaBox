@@ -17,23 +17,27 @@
           <a class="navbar-brand" href="#">IdeaBox</a>
         </div>
         <ul class="nav navbar-nav navbar-right">
+
+            {% if current_user.is_authenticated %}
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                     <!--show name-->
-                    {% if current_user.is_authenticated %}
-                        {{ current_user.first_name}} {{current_user.last_name}}
-                    {% endif %}
+                    {{ current_user.first_name}} {{current_user.last_name}}
                 <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                 {% if current_user.is_authenticated %}
-                  <li><a href="#">Home</a></li>
+                  <li><a href="/home">Home</a></li>
                   <li><a href="{{ url_for('profile')}}">My profile</a></li>
                   <li><a href="{{ url_for('idea')}}">Create New Post</a></li>
                   <!--show logout-->
                   <li><a href="{{ url_for('logout')}}"> Log Out</a></li>
-                 {% endif %}
                 </ul>
             </li>
+            {% else %}
+
+            <li><a href="/register"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+            <li><a href="/login"><span class="glyphicon glyphicon-user"></span> Login</a></li>
+
+            {% endif %}
         </ul>
       </div>
     </nav>

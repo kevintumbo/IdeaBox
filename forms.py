@@ -81,12 +81,15 @@ class LoginForm(Form):
     password = PasswordField('Password', validators=[DataRequired()])
 
 
+# Post idea form
 class IdeaForm(Form):
     title = StringField('Title', validators=[DataRequired()])
     description = PageDownField('Description', validators=[DataRequired()])
 
 
-
+# Post comment form
+class CommentForm(Form):
+    comment = TextAreaField('comment', validators=[DataRequired()])
 
 
 
