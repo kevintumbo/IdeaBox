@@ -1,4 +1,4 @@
-from flask import Flask, g, render_template, flash, redirect, url_for
+from flask import Flask, g, render_template, flash, redirect, url_for, request, abort
 from flask_bcrypt import check_password_hash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from flask_pagedown import PageDown
@@ -82,10 +82,27 @@ def logout():
     return redirect(url_for('index'))
 
 
-@app.route('/profile')
+@app.route('/home')
 @login_required
-def profile():
-    stream = current_user.get_ideas().limit(10)
+def home():
+    ideas = models.Idea.select().limit(100)
+    users = models.User.select().limit(100)
+    return render_template('home.html', ideas=ideas, users=users)
+
+
+@app.route('/profile')
+@app.route('/profile/<username>')
+@login_required
+def profile(username=None):
+    if username and username != current_user.username:
+        try:
+            user = models.User.select().where(models.User.username == username).get()
+        except models.DoesNotExist:
+            abort(404)
+
+        stream = user.ideas.limit(100)
+    else:
+        stream = current_user.get_ideas().limit(100)
     return render_template('profile.html', stream=stream)
 
 
@@ -102,9 +119,42 @@ def idea():
     return render_template('post_idea.html', form=form)
 
 
+@app.route('/view_idea/<int:idea_id>', methods=('GET', 'POST'))
+@login_required
+def view_idea(idea_id=None):
+    idea_number = request.args.get('idea_id', idea_id)
+    try:
+        my_idea = models.Idea.select().where(models.Idea.id == idea_number).get()
+    except models.DoesNotExist:
+        abort(404)
+
+    comment = models.Comment.select().where(models.Comment.idea == idea_id)
+    comment_stream = comment.limit(100)
+    form = forms.CommentForm()
+    if form.validate_on_submit():
+        models.Comment.create(user=g.user._get_current_object(),
+                              idea=my_idea,
+                              comment=form.comment.data)
+        flash("Awesome. You have posted a new idea", "Success")
+    return render_template('view_idea.html', my_idea=my_idea, comment_stream=comment_stream, form=form)
+
+
+# @app.route('/new_comment', methods=('GET', 'POST'))
+# @login_required
+# def comment():
+#     form = forms.CommentForm()
+#     if form.validate_on_submit():
+#         models.Comment.create(user=g.user._get_current_object(),
+#                               idea=idea._get_current_object(),
+#                               comment=form.comment.data)
+#         flash("Awesome. You have posted a new idea", "Success")
+#         return redirect(url_for('view'))
+#     return render_template('view_idea.html', form=form)
+
+
 @app.route('/')
 def index():
-    return 'Hey'
+    return render_template('index.html')
 
 if __name__ == '__main__':
     models.initialize()

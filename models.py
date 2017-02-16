@@ -42,6 +42,7 @@ class Idea(Model):
         rel_model=User,
         related_name='ideas'
     )
+
     title = TextField()
     description = TextField()
 
@@ -50,7 +51,24 @@ class Idea(Model):
         order_by = ('-timestamp',)
 
 
+class Comment(Model):
+    timestamp = DateTimeField(default=datetime.datetime.now)
+    user = ForeignKeyField(
+        rel_model=User,
+        related_name='comments'
+    )
+    idea = ForeignKeyField(
+        rel_model=Idea,
+        related_name='comments'
+    )
+    comment = TextField()
+
+    class Meta:
+        database = DATABASE
+        order_by = ('-timestamp',)
+
+
 def initialize():
     DATABASE.connect()
-    DATABASE.create_tables([User, Idea], safe=True)
+    DATABASE.create_tables([User, Idea, Comment], safe=True)
     DATABASE.close()

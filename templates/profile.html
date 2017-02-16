@@ -25,7 +25,7 @@
                 <span class="caret"></span></a>
                 <ul class="dropdown-menu">
                  {% if current_user.is_authenticated %}
-                  <li><a href="#">Home</a></li>
+                  <li><a href="/home">Home</a></li>
                   <li><a href="{{ url_for('profile')}}">My profile</a></li>
                   <li><a href="{{ url_for('idea')}}">Create New Post</a></li>
                   <!--show logout-->
@@ -74,8 +74,12 @@
 						    		<img class="media-object" src="http://placekitten.com/150/150">
 						  		</a>
 						  		<div class="media-body">
-						    		<h4 class="media-heading">{{ idea.title }}</h4>
-						          <p class="text-right">By Francisco</p>
+									<a href="/view_idea/{{ idea.id }}">
+										<h4 class="media-heading">{{ idea.title }}</h4>
+									</a>
+									<a href="/profile">
+										<p class="text-right"> By {{ idea.user.first_name }} {{ idea.user.last_name }}</p>
+									</a>
 						          <p> {{ idea.description }}</p>
 						          <ul class="list-inline list-unstyled">
 						  			<li><span><i class="glyphicon glyphicon-calendar"></i> 2 days, 8 hours </span></li>
