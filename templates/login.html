@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="/static/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="/static/css/signup.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/common.css">
     <script type="text/javascript" src="/static/js/jquery-1.11.1.min.js"></script>
     <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
 </head>
@@ -14,7 +15,11 @@
     <nav class="navbar navbar-default">
       <div class="container-fluid">
         <div class="navbar-header">
-          <a class="navbar-brand" href="#">IdeaBox</a>
+          {% if current_user.is_authenticated %}
+            <a class="navbar-brand" href="/home">IdeaBox</a>
+          {% else %}
+            <a class="navbar-brand" href="/">IdeaBox</a>
+          {% endif %}
         </div>
         <ul class="nav navbar-nav navbar-right">
           <li><a href="/register"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
@@ -55,16 +60,6 @@
                                         <div class="row">
                                             <div class="col-sm-6 col-sm-offset-3">
                                                 <input type="submit" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-login" value="Log In">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <div class="text-center">
-                                                    <a href="#" tabindex="5" class="forgot-password">Forgot Password?</a>
-                                                </div>
                                             </div>
                                         </div>
                                     </div>

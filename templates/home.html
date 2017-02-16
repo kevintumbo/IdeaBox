@@ -4,7 +4,8 @@
 	 <title>IdeaBox - Welcome</title>
 	 <meta charset="utf-8">
      <meta name="viewport" content="width=device-width, initial-scale=1">
-	 <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+	   <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+     <link rel="stylesheet" href="/static/css/common.css">
      <script type="text/javascript" src="/static/js/jquery-1.11.1.min.js"></script>
      <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
 </head>
@@ -12,7 +13,11 @@
     <nav class="navbar navbar-default">
       <div class="container-fluid">
         <div class="navbar-header">
-          <a class="navbar-brand" href="#">IdeaBox</a>
+          {% if current_user.is_authenticated %}
+            <a class="navbar-brand" href="/home">IdeaBox</a>
+          {% else %}
+            <a class="navbar-brand" href="/">IdeaBox</a>
+          {% endif %}
         </div>
         <ul class="nav navbar-nav navbar-right">
 
@@ -51,36 +56,48 @@
           <div class="panel with-nav-tabs panel-primary">
                 <div class="panel-heading">
                         <ul class="nav nav-tabs">
-                            <li class="active"><a href="#tab1primary" data-toggle="tab">All Ideas</a></li>
+                            <li class="active"><a href="#tab1primary" data-toggle="tab">All Ideas <b>({{ ideas|length }})</b> </a></li>
                         </ul>
                 </div>
 
                 <div class="panel-body">
+                {% if ideas|length == 0 %}
+                          <h3 style="color:black">
+                          There are no ideas to display
+                        </h3>
+                {% else %}
                     {% for idea in ideas %}
                     <div class="tab-content">
                         <div class="tab-pane fade in active" id="tab1primary">
                           <div class="well">
                             <div class="media">
-                              <a class="pull-left" href="#">
-                                <img class="media-object" src="http://placekitten.com/150/150" style="width:50%">
+                              <a class="pull-left" href="#" style="width:10%">
+                                <img class="media-object" src="/static/img/idea.jpeg" style="width:100%">
                               </a>
                               <div class="media-body">
-                                <h4 class="media-heading">{{ idea.title}}</h4>
-                                  <p class="text-right"> By: <a href="/profile/{{ idea.user.username }}"> {{ idea.user.first_name}} {{idea.user.last_name}} </a></p>
-                                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra varius quam sit amet vulputate. Quisque mauris augue, molestie tincidunt condimentum vitae, gravida a libero. Aenean sit amet felis dolor, in sagittis nisi. Sed ac orci quis tortor imperdiet venenatis. Duis elementum auctor accumsan.liquam in felis sit amet augue.
+                                <h4 class="media-heading">
+                                  <a href="/view_idea/{{ idea.id}}">{{ idea.title}}</a>
+                                </h4>
+                                  <p class="text-left"> By: <a href="/profile/{{ idea.user.username }}"> {{ idea.user.first_name}} {{idea.user.last_name}} </a></p>
+                                  <div id="desc">
+                                    <p >
+                                    {{ idea.description}}
                                   </p>
-
-
+                                  </div>
+                                
                                   <ul class="list-inline list-unstyled">
-                                    <li><span><i class="glyphicon glyphicon-calendar"></i> 2 days, 8 hours </span></li>
+                                    <li>
+                                      <i class="glyphicon glyphicon-calendar"></i>
+                                      <time class="distime" datetime="{{idea.timestamp.strftime('%Y-%m-%d')}}"></time> {{idea.timestamp.strftime('%d-%m-%Y')}} 
+                                    </li>
                                     <li>|</li>
                                     <li>
-                                        <span><i class="glyphicon glyphicon-comment"></i> 2 comments</span>
+                                        <span><i class="glyphicon glyphicon-comment"></i> {{ idea.comments|length}} comments</span>
                                     </li>
                                     <li>|</li>
 
                                     <li>
-                                        <a href="/view_idea/{{ idea.id}}"><button>View Idea</button></a>
+                                        <a href="/view_idea/{{ idea.id}}"><button>Read more</button></a>
                                     </li>
 
                                   </ul>
@@ -90,6 +107,7 @@
                           </div>
                     </div>
                     {% endfor %}
+                  {% endif %}
                 </div>
 
             </div>
@@ -99,7 +117,7 @@
           <div class="panel with-nav-tabs panel-primary">
                 <div class="panel-heading">
                         <ul class="nav nav-tabs">
-                            <li class="active"><a href="#tab1primary" data-toggle="tab">All Users</a></li>
+                            <li class="active"><a href="#tab1primary" data-toggle="tab">All Users <b>({{ users|length }})</a></li>
                         </ul>
                 </div>
 
@@ -109,7 +127,7 @@
                     <div class="tab-content">
                       <div class="info-block block-info clearfix">
                         <div class="square-box pull-left" style="width:30%">
-                            <img class="media-object" src="http://placekitten.com/150/150" style="width:50%">
+                            <img class="media-object" src="/static/img/user.gif" style="width:50%">
                         </div>
                           <a href="/profile/{{ user.username }}">
                               <h5>Name: <b>{{ user.first_name}} {{user.last_name}}</b></h5>
