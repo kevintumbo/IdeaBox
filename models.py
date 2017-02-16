@@ -22,6 +22,9 @@ class User(UserMixin, Model):
     def get_ideas(self):
         return Idea.select().where(Idea.user == self)
 
+    def get_comments(self):
+        return Comment.select().where(Comment.user == self)
+
     @classmethod
     def create_user(cls, first_name, last_name, username, email, password):
         try:

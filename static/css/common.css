@@ -1,0 +1,48 @@
+/*log in and sign up buttons*/
+
+.btn-normal {
+	background-color: #1CB94E;
+	outline: none;
+	color: #fff;
+	font-size: 14px;
+	height: auto;
+	font-weight: normal;
+	padding: 14px 0;
+	text-transform: uppercase;
+	border-color: #1CB94A;
+	display: block;
+    width: 100%;
+}
+.btn-normal:hover,
+.btn-normal:focus {
+	color: #fff;
+	background-color: #1CA347;
+	border-color: #1CA347;
+}
+
+/*panel design*/
+
+.panel.with-nav-tabs .panel-heading{
+    padding: 5px 5px 0 5px;
+}
+.panel.with-nav-tabs .nav-tabs{
+	border-bottom: none;
+}
+.panel.with-nav-tabs .nav-justified{
+	margin-bottom: -1px;
+}
+
+#desc{
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+/*footer*/
+
+footer {
+    font-size: 1em;
+    text-align: center;
+    clear: both;
+    padding-top: 10px;
+    color: #3359df;
+}
